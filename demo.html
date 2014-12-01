@@ -1,8 +1,10 @@
 <html>
 <head>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="./js-priority-queue/priority-queue.js"></script>
 </head>
 <body>
+	<div id="message"></div>
 	<div id="grid" style='width:520px;height:500px;'>
 		
 	</div>
@@ -47,10 +49,71 @@ div.inline { float:left; }
 		}
 	});
 
-	// for (var i = 0; i < height ; i++) {
-	// 	for (var j = 0; j < width; j++) {
-	// 		$("#"+i+"-"+j).css("background-color","#ffffff");
-	// 	}
-	// }
+	function get_key(i,j){return  i+"-"+j;	}
+	function get_heuristic(x,y){return Math.abs(x[0]-y[0])+Math.abs(x[1]-y[1])}
+	function get_point(x){s = x.split("-"); return [s[0],s[1]];}
+
+	var height = 7;
+	var width = 7;
+	var e_max = 10;
+	var e;
+	var start = [1,1];
+	var goal = [4,5];
+	var s_start = get_key(start[0],start[1]) ;
+	var s_goal 	= get_key(goal[0],goal[1]) ;
+	var v = {};
+	var g = {};
+	var h = {};
+	var f = {};
+	var parent = {};
+	var open = new PriorityQueue({ comparator: function(a, b) { return a[1] - b[1]; }}); //tie-breaking
+	var open_list = []
+	var closed_list = []
+	var incons_list = []
+	var deleted_list = []
+	
+	function ImprovePath(){
+		while(g[s_goal] + e*get_heuristic())
+	}
+	function ComputePath(){
+		while(true){
+			if(ImprovePath()==false){
+				return false;
+			}
+		}
+	}
+	function run_iara(){
+		//for s E S
+		for (var i = 0; i < height ; i++) {
+			for (var j = 0; j < width; j++) {	
+				var key = get_key(i,j);
+				v[key] = Infinity;
+				g[key] = Infinity;
+				parent[key] = null;
+				f[key] = Infinity;
+				h[key] = get_heuristic([i,j],get_point(s_goal));
+			}
+		}
+		f[s_start] 	= 0		;
+		g(s_start) 	= 0		;
+		e 		= e_max ;
+		// s_start = get_key(start[0],start[1]) ;
+		// s_goal 	= get_key(goal[0],goal[1]) ;
+		open 		= new PriorityQueue({ comparator: function(a, b) { return a[1] - b[1]; }});
+		open_list 	= []	;
+		closed_list = []	;
+		incons_list = []	;
+		deleted_list= []	;
+
+		open.queue([s_start,f[s_start]]);
+		open_list.push(s_start);
+		while(s_start!=s_goal){
+			if(ComputePath()==false){
+				$("#message").html("No Solution Found").hide().show(2000);
+				return false;
+			}
+		}
+	}
+
 </script>
 </html>
