@@ -1,0 +1,56 @@
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="grid" style='width:520px;height:500px;'>
+		
+	</div>
+	<!-- <div style="width: 500px;">
+ <div style="float: left; width: 100px;height: 100px;border: 1px solid;">Left Stuff</div>
+ <div style="float: left; width: 100px;height: 100px;border: 1px solid;">Middle Stuff</div>
+ <div style="float: left; width: 100px;height: 100px;border: 1px solid;">Right Stuff</div>
+ <br style="clear: left;" />
+</div>
+ -->
+</body>
+<style type="text/css">
+div.inline { float:left; }
+.clearBoth { clear:both; }
+</style>
+
+<script type="text/javascript">
+	var width=10;
+	var height=5;
+	$(document).ready(function(){
+		for (var i = 0; i < height ; i++) {
+			for (var j = 0; j < width; j++) {
+				// $("#grid").append("<div id='"+i+","+j+"' style='float:left;'> </div>");
+				$("#grid").append('<div id="'+i+'-'+j+'" style="float: left; width: 50px;height: 50px;border: 1px solid;" data-vacant="blocked"></div>');
+			};
+			$("#grid").append("<br>");
+		};
+
+		counter = 1;
+		for (var i = 0; i < height ; i++) {
+			for (var j = 0; j < width; j++) {	
+				// setTimeout(function(i,j){green(i,j);}, 1000);
+				counter+=1;
+				(function (x,y,z) {
+				        setTimeout(function () { green(x,y); }, 100*z);
+				    })(i,j,counter);
+			}
+		}
+		function green(i,j){
+			console.log(i);
+			$("#"+i+"-"+j).hide().fadeIn( 10000 ).css("background-color","gray");
+		}
+	});
+
+	// for (var i = 0; i < height ; i++) {
+	// 	for (var j = 0; j < width; j++) {
+	// 		$("#"+i+"-"+j).css("background-color","#ffffff");
+	// 	}
+	// }
+</script>
+</html>

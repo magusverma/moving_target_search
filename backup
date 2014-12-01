@@ -1,0 +1,61 @@
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+	<div id="grid" style='width:520px;height:500px;'>
+		
+	</div>
+	<!-- <div style="width: 500px;">
+ <div style="float: left; width: 100px;height: 100px;border: 1px solid;">Left Stuff</div>
+ <div style="float: left; width: 100px;height: 100px;border: 1px solid;">Middle Stuff</div>
+ <div style="float: left; width: 100px;height: 100px;border: 1px solid;">Right Stuff</div>
+ <br style="clear: left;" />
+</div>
+ -->
+</body>
+<style type="text/css">
+div.inline { float:left; }
+.clearBoth { clear:both; }
+</style>
+
+<script type="text/javascript">
+	var width=3;
+	var height=3;
+	$(document).ready(function(){
+		for (var i = 0; i < height ; i++) {
+			for (var j = 0; j < width; j++) {
+				// $("#grid").append("<div id='"+i+","+j+"' style='float:left;'> </div>");
+				$("#grid").append('<div id="'+i+'-'+j+'" style="float: left; width: 50px;height: 50px;border: 1px solid;"></div>');
+			};
+			$("#grid").append("<br>");
+		};
+		counter = 1;
+		for (var i = 0; i < height ; i++) {
+			for (var j = 0; j < width; j++) {
+				// alert("hi");
+				// console.log("#"+i+"-"+j);
+				// $("#"+i+"-"+j).hide().fadeIn( 3000 ).css("background-color","green");
+				// counter++;
+				// console.log(counter);
+				// setTimeout(green(i,j),1000*(i*10+j));
+				green(i,j);	
+				sleep(1000);	
+			}
+		}
+		function green(i,j){
+			$("#"+i+"-"+j).hide().fadeIn( 3000 ).css("background-color","green");
+		}
+		function sleep(milliseconds) {
+		  var start = new Date().getTime();
+		  while(true ) {
+		    if ((new Date().getTime() - start) > milliseconds){
+		      break;
+		    }
+		  }
+		}
+
+	});
+
+</script>
+</html>
