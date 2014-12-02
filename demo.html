@@ -51,7 +51,10 @@ div.inline { float:left; }
 
 	function get_key(i,j){return  i+"-"+j;	}
 	function get_heuristic(x,y){return Math.abs(x[0]-y[0])+Math.abs(x[1]-y[1])}
-	function get_point(x){s = x.split("-/"); return [s[0],s[1]];}
+	function get_point(x){
+		s = x.split("-");
+		return [parseInt(s[0]),parseInt(s[1])];
+	}
 
 	var height = 7;
 	var width = 7;
@@ -75,6 +78,7 @@ div.inline { float:left; }
 	var previous_s = get_key(start[0],start[1]) ;
 	var previous_goal = get_key(goal[0],goal[1]) ;
 	var delta = 4;
+	run_iara();
 	//http://stackoverflow.com/questions/3629817/getting-a-union-of-two-arrays-in-javascript
 	function union_arrays (x, y) {
 	  var obj = {};
@@ -96,7 +100,8 @@ div.inline { float:left; }
 		var s_min = null;
 		for (var i = open_list.length - 1; i >= 0; i--) {
 			s = open_list[i];
-			cost = g(s) + e*get_heuristic(get_point(s),get_point(s_goal));
+			// console.log(s);
+			cost = g[s] + e*h[s];
 			if (cost < val){
 				val = cost;
 				s_min = s;
@@ -107,7 +112,7 @@ div.inline { float:left; }
 
 	function neighbor(s){
 		p = get_point(s);
-		ns = []
+		ns = [];
 		if ((height >= p[0]+1 >=0) & (width >= p[1]+0 >=0)){
 			ns.push([p[0]+1,p[1]+0]);
 		}
@@ -120,24 +125,31 @@ div.inline { float:left; }
 		if ((height >= p[0]+0 >=0) & (width >= p[1]-1 >=0)){
 			ns.push([p[0]+0,p[1]-1]);
 		}
-
+		return ns
 	}
 
 	function ImprovePath(){
 		//check this line
-		while(g[s_goal] + e*get_heuristic(s_goal,s_goal) > get_min_s_open_val()[1]){
+		while(g[s_goal] > get_min_s_open_val()[1]){
 			s = get_min_s_open_val()[0];
+			cpy = s;
+			// s = get_key(p[0],p[1]);
+			console.log(s+"kya hai?");
 			index = open_list.indexOf(s);
 			if (index > -1) {
 			    open_list.splice(index, 1);
 			}
 			closed_list.push(s);
-			v(s) = g(s);
+			v[s] = g[s];
 			ns = neighbor(s);
+			s = cpy;
+			console.log("neighbor of "+s+" are: ",ns);
 			for (var i = ns.length - 1; i >= 0; i--) {
-				s_d = get_key(ns[i])
-				if( g[s_d] > v(s) + 1 ){
-					g[s_d] = v(s) + 1
+				s_d = get_key(ns[i][0],ns[i][1])
+				console.log(s_d+" "+s+ " "+v[s]);
+				// console.log(g[s_d] , v[s] );
+				if( g[s_d] > v[s] + 1 ){
+					g[s_d] = v[s] + 1
 					parent[s_d] = s;
 					index = closed_list.indexOf(s_d);
 					if(index == -1){
@@ -250,7 +262,7 @@ div.inline { float:left; }
 			e = e_max;
 		}
 		else{
-			e = max(1,e-delta);
+			e = Math.max(1,e-delta);
 		}
 	}
 	function run_iara(){
@@ -265,9 +277,8 @@ div.inline { float:left; }
 				h[key] = get_heuristic([i,j],get_point(s_goal));
 			}
 		}
-		f[s_start] 	= 0		;
-		g(s_start) 	= 0		;
-		e 		= e_max ;
+		g[s_start] 	= 0		;
+		e 			= e_max ;
 		// s_start = get_key(start[0],start[1]) ;
 		// s_goal 	= get_key(goal[0],goal[1]) ;
 		// open 		= new PriorityQueue({ comparator: function(a, b) { return a[1] - b[1]; }});
@@ -286,14 +297,18 @@ div.inline { float:left; }
 			previous_s = s_start;
 			found_start = false;
 			key = s_goal;
+			path = []
 			while(key!=null){
 				if(parent[key]==s_start){
 					found_start = true;
 					break;
 				}
+				s_start = key;
 				key = parent[key];	
 			}
-			s_start = key;
+			console.log("key"+key);
+			
+			console.log("Now"+s_start);
 			if(s_start==s_goal){
 				return true;
 			}				
