@@ -24,7 +24,7 @@ div.inline { float:left; }
 <script type="text/javascript">
 	var width=10;
 	var height=5;
-	$(document).ready(function(){
+	// $(document).ready(function(){
 		for (var i = 0; i < height ; i++) {
 			for (var j = 0; j < width; j++) {
 				// $("#grid").append("<div id='"+i+","+j+"' style='float:left;'> </div>");
@@ -44,10 +44,10 @@ div.inline { float:left; }
 			}
 		}
 		function green(i,j){
-			console.log(i);
+			// console.log(i);
 			$("#"+i+"-"+j).hide().fadeIn( 10000 ).css("background-color","gray");
 		}
-	});
+	// });
 
 	function get_key(i,j){return  i+"-"+j;	}
 	function get_heuristic(x,y){return Math.abs(x[0]-y[0])+Math.abs(x[1]-y[1])}
@@ -100,7 +100,7 @@ div.inline { float:left; }
 		var s_min = null;
 		for (var i = open_list.length - 1; i >= 0; i--) {
 			s = open_list[i];
-			// console.log(s);
+			// // console.log(s);
 			cost = g[s] + e*h[s];
 			if (cost < val){
 				val = cost;
@@ -134,7 +134,7 @@ div.inline { float:left; }
 			s = get_min_s_open_val()[0];
 			cpy = s;
 			// s = get_key(p[0],p[1]);
-			console.log(s+"kya hai?");
+			// console.log(s+"kya hai?");
 			index = open_list.indexOf(s);
 			if (index > -1) {
 			    open_list.splice(index, 1);
@@ -143,11 +143,11 @@ div.inline { float:left; }
 			v[s] = g[s];
 			ns = neighbor(s);
 			s = cpy;
-			console.log("neighbor of "+s+" are: ",ns);
+			// console.log("neighbor of "+s+" are: ",ns);
 			for (var i = ns.length - 1; i >= 0; i--) {
 				s_d = get_key(ns[i][0],ns[i][1])
-				console.log(s_d+" "+s+ " "+v[s]);
-				// console.log(g[s_d] , v[s] );
+				// console.log(s_d+" "+s+ " "+v[s]);
+				// // console.log(g[s_d] , v[s] );
 				if( g[s_d] > v[s] + 1 ){
 					g[s_d] = v[s] + 1
 					parent[s_d] = s;
@@ -208,10 +208,17 @@ div.inline { float:left; }
 			parent[s_start] = null;
 			for (var i = 0; i < height ; i++) {
 				for (var j = 0; j < width; j++) {
-					key = get_key(i,j);
-					while(parent[key]!= null){
-						parent = parent[key]
-						if (parent == s_start){
+					var found_start = false;
+					var key = get_key(i,j);
+					path = [];
+					while(key!=null){
+						if(key == s_start)found_start = true;
+						path.push(key);
+						key = parent[key];
+						// console.log(parent);	
+					}
+					// console.log(path);
+					if(found_start){
 							k = get_key(i,j);
 							v[k] = Infinity;
 							g[k] = Infinity;
@@ -225,12 +232,7 @@ div.inline { float:left; }
 							    open_list.splice(index, 1);
 							}
 							deleted_list.push(k);
-							break;
-						}
-						else{
-							key = parent[key];
-						}
-					}
+					}					
 				}
 			}
 		}
@@ -297,26 +299,38 @@ div.inline { float:left; }
 			previous_s = s_start;
 			found_start = false;
 			key = s_goal;
-			path = []
+			path = [];
 			while(key!=null){
-				if(parent[key]==s_start){
-					found_start = true;
-					break;
-				}
-				s_start = key;
-				key = parent[key];	
+				if(key == s_start)found_start = true;
+				path.push(key);
+				key = parent[key];
+				// // console.log(parent);	
 			}
-			console.log("key"+key);
 			
-			console.log("Now"+s_start);
+			if(found_start){
+				while(path.pop()!=s_start);
+			}
+			s_start = path.pop();
+			console.log("Now at: "+s_start);
+			// // console.log("Now"+s_start);
+			// // console.log(parent);	
 			if(s_start==s_goal){
 				return true;
 			}				
 			s_goal = s_goal;
+			// console.log(parent);
 			Step1();
+			// // console.log("After 1");
+			// // console.log(parent);	
 			Step2();
+			// // console.log("After 2");
+			// // console.log(parent);	
 			Step3();
+			// // console.log("After 3");
+			// // console.log(parent);	
 			Step4();
+			// // console.log("After 4"+parent);	
+			// s_start = s_goal;
 		}
 		return true;
 	}
