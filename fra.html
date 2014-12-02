@@ -1,0 +1,135 @@
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="./js-priority-queue/priority-queue.js"></script>
+</head>
+<body>
+	<div id="message"></div>
+	<div id="grid">
+		
+	</div>
+	<!-- <div style="width: 500px;">
+ <div style="float: left; width: 100px;height: 100px;border: 1px solid;">Left Stuff</div>
+ <div style="float: left; width: 100px;height: 100px;border: 1px solid;">Middle Stuff</div>
+ <div style="float: left; width: 100px;height: 100px;border: 1px solid;">Right Stuff</div>
+ <br style="clear: left;" />
+</div>
+ -->
+</body>
+<style type="text/css">
+div.inline { float:left; }
+.clearBoth { clear:both; }
+</style>
+
+<script type="text/javascript">
+	var height = 7;
+	var width = 7;
+	$("#grid").css("width",width*82);
+	$("#grid").css("height",height*82);
+
+	var grid = [[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,0,0,0,0,1],[1,0,0,0,1,0,1],[1,0,0,0,1,0,1],[1,0,0,0,1,0,1],[1,1,1,1,1,1,1]]
+	// $(document).ready(function(){
+		for (var i = 0; i < height ; i++) {
+			for (var j = 0; j < width; j++) {
+				// $("#grid").append("<div id='"+i+","+j+"' style='float:left;'> </div>");
+				if (grid[i][j]){
+					$("#grid").append('<div id="'+i+'-'+j+'" style="float: left; width: 80px;height: 80px;border: 1px solid;background-color:black" data-vacant="blocked"></div>');
+				}
+				else{
+					$("#grid").append('<div id="'+i+'-'+j+'" style="float: left; width: 80px;height: 80px;border: 1px solid;" data-vacant="blocked"></div>');
+				}
+			};
+			// $("#grid").append("<br>");
+		};
+
+		counter = 1;
+	function get_key(i,j){return  i+"-"+j;	}
+	function get_heuristic(x,y){return Math.abs(x[0]-y[0])+Math.abs(x[1]-y[1])}
+	function get_point(x){
+		s = x.split("-");
+		return [parseInt(s[0]),parseInt(s[1])];
+	}
+
+	var e_max = 10;
+	var e;
+	var start = [1,1];
+	var goal = [4,5];
+	var s_start = get_key(start[0],start[1]) ;
+	var s_goal 	= get_key(goal[0],goal[1]) ;
+	var v = {};
+	var g = {};
+	var h = {};
+	var f = {};
+	var parent = {};
+	var child = {};
+	var generated_itetation = {};
+	var expanded = {};
+	
+	var iteration ;
+	// var open = new PriorityQueue({ comparator: function(a, b) { return a[1] - b[1]; }}); //tie-breaking
+	var open_list = [];
+	var closed_list = [];
+	var previous_s = get_key(start[0],start[1]) ;
+	var previous_goal = get_key(goal[0],goal[1]) ;
+	run_fra();
+	//http://stackoverflow.com/questions/3629817/getting-a-union-of-two-arrays-in-javascript
+
+	function union_arrays (x, y) {
+	  var obj = {};
+	  for (var i = x.length-1; i >= 0; -- i)
+	     obj[x[i]] = x[i];
+	  for (var i = y.length-1; i >= 0; -- i)
+	     obj[y[i]] = y[i];
+	  var res = []
+	  for (var k in obj) {
+	    if (obj.hasOwnProperty(k))  // <-- optional
+	      res.push(obj[k]);
+	  }
+	  return res;
+	}
+
+
+	function neighbor(s){
+		p = get_point(s);
+		ns = [];
+		if ((height >= p[0]+1 >=0) & (width >= p[1]+0 >=0) &(!grid[p[0]+1][p[1]+0])){
+			ns.push([p[0]+1,p[1]+0]);
+		}
+		if ((height >= p[0]-1 >=0) & (width >= p[1]+0 >=0)&(!grid[p[0]-1][p[1]+0])){
+			ns.push([p[0]-1,p[1]+0]);
+		}
+		if ((height >= p[0]+0 >=0) & (width >= p[1]+1 >=0)&(!grid[p[0]+0][p[1]+1])){
+			ns.push([p[0]+0,p[1]+1]);
+		}
+		if ((height >= p[0]+0 >=0) & (width >= p[1]-1 >=0)&(!grid[p[0]+0][p[1]-1])){
+			ns.push([p[0]+0,p[1]-1]);
+		}
+		return ns
+	}
+
+	function InitializeCell(s){
+		if(generated_itetation[s] != iteration){
+			g[s] = Infinity;
+			generated_itetation[s] = iteration;
+			expanded[s] = false;
+		}
+	}
+
+	function TestClosedList(s){
+		return ((s=s_start)||(expanded[s] && parent[s]!=null));
+	}
+
+	function ComputeShortestPath(){
+		while(open_list.length>0){
+			min_s = null;
+			min_v = Infinity;
+			for (var i = open_list.length - 1; i >= 0; i--) {
+				var s = open_list[i];
+				var v =  
+				if(min_v>)
+			};
+		}
+	}
+
+</script>
+</html>
